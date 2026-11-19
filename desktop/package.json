@@ -20,10 +20,25 @@
     "appId": "si.visionone.kamere",
     "productName": "VisionOne Kamere",
     "copyright": "VisionOne",
-    "directories": { "output": "dist", "buildResources": "build" },
-    "files": ["app/**/*", "build/icon.png", "build/tray.png", "package.json"],
+    "directories": {
+      "output": "dist",
+      "buildResources": "build"
+    },
+    "files": [
+      "app/**/*",
+      "build/icon.png",
+      "build/tray.png",
+      "package.json"
+    ],
     "win": {
-      "target": [{ "target": "nsis", "arch": ["x64"] }],
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "x64"
+          ]
+        }
+      ],
       "icon": "build/icon.ico",
       "artifactName": "VisionOne-Kamere-Setup.${ext}"
     },
@@ -33,12 +48,17 @@
       "allowToChangeInstallationDirectory": true,
       "createDesktopShortcut": true,
       "createStartMenuShortcut": true,
-      "shortcutName": "VisionOne Kamere",
-      "installerLanguages": ["sl_SI"],
-      "language": "1060"
+      "shortcutName": "VisionOne Kamere"
     },
     "mac": {
-      "target": [{ "target": "dmg", "arch": ["universal"] }],
+      "target": [
+        {
+          "target": "dmg",
+          "arch": [
+            "universal"
+          ]
+        }
+      ],
       "icon": "build/icon.png",
       "category": "public.app-category.utilities",
       "artifactName": "VisionOne-Kamere.${ext}"
