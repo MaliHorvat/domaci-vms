@@ -7,8 +7,8 @@ rtsp:
 webrtc:
   listen: ":8555"
   candidates:
-    - ${HOST_IP:127.0.0.1}:8555    # naslov NAS-a doma (HOST_IP v .env)
-    - ${VPN_HOST:127.0.0.1}:8555   # naslov NAS-a v VPN-ju (VPN_HOST v .env)
+    - ${HOST_IP:127.0.0.1}:${WEBRTC_PORT:8555}    # naslov NAS-a doma (HOST_IP v .env)
+    - ${VPN_HOST:127.0.0.1}:${WEBRTC_PORT:8555}   # naslov NAS-a v VPN-ju (VPN_HOST v .env)
 ffmpeg:
   bin: ffmpeg
 log:

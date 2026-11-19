@@ -36,6 +36,8 @@ Potrebujete Docker. Na **Synology** je to *Container Manager*, na **QNAP** *Cont
    Na Synologyju lahko v Container Managerju ustvarite *Projekt* in izberete `docker-compose.yml`.
 4. Na računalniku doma odprite `http://<HOST_IP>:8080/admin/`, se prijavite kot `admin` in **spremenite geslo** (Sistem → Moj račun).
 
+Če Docker javi *port is already allocated*, vrata uporablja drug program (npr. starejša različica VisionOne VMS: ustavite jo z `docker compose -p visionone down`) ali v `.env` nastavite druga vrata (`VMS_PORT`, `WEBRTC_PORT`).
+
 Posodobitev: `docker compose up -d --build` v isti mapi. Zaustavitev: `docker compose down`.
 
 ---
@@ -51,7 +53,8 @@ Brezplačno za osebno uporabo, deluje tudi, če vaš ponudnik interneta nima jav
 1. Ustvarite račun na [tailscale.com](https://tailscale.com).
 2. **NAS**:
    - **Synology**: v *Centru za pakete* namestite *Tailscale* in se prijavite. Ali
-   - **Docker**: na [login.tailscale.com → Settings → Keys](https://login.tailscale.com/admin/settings/keys) ustvarite *Auth key*, ga vpišite v `.env` kot `TS_AUTHKEY` in zaženite znova (`zagon.sh` sam vklopi profil `vpn`).
+   - **Mini PC z Windows**: namestite aplikacijo [Tailscale za Windows](https://tailscale.com/download/windows) in se prijavite (Tailscale v Dockerju na Windows ne deluje).
+   - **Docker na Linuxu / NAS-u**: na [login.tailscale.com → Settings → Keys](https://login.tailscale.com/admin/settings/keys) ustvarite *Auth key*, ga vpišite v `.env` kot `TS_AUTHKEY` in zaženite znova (`zagon.sh` sam vklopi profil `vpn`).
 3. V nadzorni plošči Tailscale preberite naslov NAS-a (`100.x.y.z`) in ga vpišite v `.env` kot `VPN_HOST`. Zaženite znova.
 4. Na **računalniku** in **telefonu** namestite aplikacijo Tailscale in se prijavite z istim računom.
 

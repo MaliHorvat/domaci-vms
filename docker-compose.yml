@@ -17,11 +17,13 @@ services:
       - TZ=${TZ:-Europe/Ljubljana}
       - HOST_IP=${HOST_IP:-127.0.0.1}
       - VPN_HOST=${VPN_HOST:-127.0.0.1}
+      - WEBRTC_PORT=${WEBRTC_PORT:-8555}
     volumes:
       - ./go2rtc:/config:ro
     ports:
-      - "8555:8555/tcp"      # WebRTC: živa slika z najmanjšim zamikom (doma in prek VPN-ja)
-      - "8555:8555/udp"
+      # WebRTC: živa slika z najmanjšim zamikom (doma in prek VPN-ja). Če so vrata zasedena, v .env nastavite WEBRTC_PORT.
+      - "${WEBRTC_PORT:-8555}:8555/tcp"
+      - "${WEBRTC_PORT:-8555}:8555/udp"
 
   vms:
     build: ./vms
