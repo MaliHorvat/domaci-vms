@@ -22,7 +22,12 @@ function normUrl(v) {
   v = String(v || '').trim().replace(/\/+$/, '');
   if (!v) return '';
   if (!/^https?:\/\//i.test(v)) v = `http://${v}`;
-  try { const u = new URL(v); return `${u.protocol}//${u.host}`; } catch { return null; }
+  try {
+    const u = new URL(v);
+    // brez vrat → privzeta vrata strežnika (8080), ne 80
+    if (!u.port && !/:\d+(\/|$)/.test(v.replace(/^https?:\/\//i, '')) && u.protocol === 'http:') u.port = '8080';
+    return `${u.protocol}//${u.host}`;
+  } catch { return null; }
 }
 
 /** Koda za povezavo iz Admin → Dostop z naprav (V1-…) */

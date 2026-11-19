@@ -9,7 +9,7 @@ const cleanUrl = v => {
   v = String(v || '').trim().replace(/\/+$/, '');
   if (!v) return '';
   if (!/^https?:\/\//i.test(v)) v = `http://${v}`;
-  try { const u = new URL(v); return `${u.protocol}//${u.host}`; } catch { return null; }
+  try { const u = new URL(v); if (!u.port && u.protocol === 'http:') u.port = location.port || '8080'; return `${u.protocol}//${u.host}`; } catch { return null; }
 };
 
 /** Koda, ki jo prilepite v namizno aplikacijo: oba naslova v eni vrstici. */
