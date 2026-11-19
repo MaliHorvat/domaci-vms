@@ -4,6 +4,7 @@ cd "$(dirname "$0")"
 [ -f .env ] || { cp .env.example .env; echo "Ustvarjena datoteka .env – vpišite geslo, HOST_IP in po želji TS_AUTHKEY, nato zaženite znova."; exit 0; }
 PROFILI=""
 grep -Eq '^TS_AUTHKEY=.+' .env && PROFILI="--profile vpn"
+grep -Eq '^AI_TOKEN=.+' .env && PROFILI="$PROFILI --profile ai"
 docker compose $PROFILI up -d --build
 IP=$(grep -E '^HOST_IP=' .env | cut -d= -f2)
 PORT=$(grep -E '^VMS_PORT=' .env | cut -d= -f2)

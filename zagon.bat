@@ -26,7 +26,11 @@ if not errorlevel 1 (
 rem Tailscale v Dockerju na Windows ne deluje (ni host omrezja) - odstranimo ga, ce je ostal od prej
 docker rm -f vms-tailscale >nul 2>&1
 
-docker compose up -d --build --remove-orphans
+rem AI modul se vklopi sam, ce je v .env nastavljen AI_TOKEN
+set PROFILI=
+findstr /r "^AI_TOKEN=." .env >nul && set PROFILI=--profile ai
+
+docker compose %PROFILI% up -d --build --remove-orphans
 if errorlevel 1 (
   echo.
   echo Zagon ni uspel. Preberite napako zgoraj.
