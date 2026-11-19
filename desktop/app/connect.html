@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="sl">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:">
+  <title>VisionOne Kamere</title>
+  <link rel="stylesheet" href="connect.css">
+</head>
+<body>
+  <main class="wrap">
+    <div class="brand"><span class="mark"></span><div><strong>VisionOne Kamere</strong><span id="ver"></span></div></div>
+
+    <section id="offline" hidden>
+      <h1>Strežnik ni dosegljiv</h1>
+      <p class="lead">Aplikacija poskuša znova vsakih 10 sekund. Ko bo strežnik dosegljiv, se slika kamer odpre sama.</p>
+      <ul class="checks">
+        <li>Ali je NAS oziroma mini PC prižgan in povezan v omrežje?</li>
+        <li>Če niste doma: ali je na tem računalniku vklopljen VPN (Tailscale ali WireGuard)?</li>
+        <li>Ali sta naslova v nastavitvah povezave pravilna?</li>
+      </ul>
+      <p class="tried" id="tried"></p>
+      <div class="row">
+        <button class="primary" id="retry">Poskusi znova</button>
+        <button id="toSettings">Nastavitve povezave</button>
+      </div>
+    </section>
+
+    <section id="settings" hidden>
+      <h1 id="setTitle">Povezava s strežnikom</h1>
+      <p class="lead">Kodo za povezavo najdete na strežniku v Admin → Dostop z naprav. Prilepite jo spodaj ali vpišite naslova ročno.</p>
+      <form id="form" autocomplete="off">
+        <label class="field"><span>Koda za povezavo</span>
+          <input id="code" placeholder="V1-…" spellcheck="false"></label>
+        <div class="or"><span>ali vpišite naslova</span></div>
+        <label class="field"><span>Doma (lokalno omrežje)</span>
+          <div class="addr"><input id="lan" placeholder="192.168.1.20:8080" spellcheck="false"><i class="st" id="stLan"></i></div></label>
+        <label class="field"><span>Od zunaj (VPN)</span>
+          <div class="addr"><input id="remote" placeholder="100.88.12.7:8080" spellcheck="false"><i class="st" id="stRemote"></i></div>
+          <small>Naslov strežnika v omrežju Tailscale ali WireGuard. Uporabi se, kadar niste doma.</small></label>
+        <label class="check"><input type="checkbox" id="autostart"> Zaženi ob prijavi v Windows</label>
+        <label class="check"><input type="checkbox" id="keepAwake"> Zaslon naj ne ugasne (stenski monitor)</label>
+        <p class="err" id="err" role="alert"></p>
+        <div class="row">
+          <button class="primary" type="submit">Shrani in poveži</button>
+          <button type="button" id="cancel" hidden>Prekliči</button>
+        </div>
+      </form>
+    </section>
+
+    <section id="searching" hidden>
+      <h1>Povezujem s strežnikom …</h1>
+      <p class="lead">Preverjam domači naslov in naslov prek VPN-ja.</p>
+    </section>
+  </main>
+  <script src="connect.js"></script>
+</body>
+</html>

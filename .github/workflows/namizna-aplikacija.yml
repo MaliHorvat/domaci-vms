@@ -1,0 +1,48 @@
+# Zgradi namestitveni program namizne aplikacije za Windows in ga objavi med izdajami (Releases).
+# Sproži se ob vsaki spremembi mape desktop/ ali ročno (Actions → Namizna aplikacija → Run workflow).
+name: Namizna aplikacija
+
+on:
+  push:
+    branches: [main]
+    paths: ["desktop/**", ".github/workflows/namizna-aplikacija.yml"]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  windows:
+    runs-on: windows-latest
+    defaults:
+      run:
+        working-directory: desktop
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Namestitev orodij
+        run: npm install --no-audit --no-fund
+      - name: Gradnja namestitvenega programa
+        run: npx electron-builder --win --publish never
+        env:
+          CSC_IDENTITY_AUTO_DISCOVERY: "false"
+      - name: Shrani kot artefakt
+        uses: actions/upload-artifact@v4
+        with:
+          name: VisionOne-Kamere-Setup
+          path: desktop/dist/VisionOne-Kamere-Setup.exe
+      - name: Objavi izdajo
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          VER=$(node -p "require('./package.json').version")
+          TAG="namizna-v$VER"
+          NOTES="Namestitveni program za Windows. Prenesite VisionOne-Kamere-Setup.exe in ga zaženite. Windows lahko ob prvem zagonu prikaže opozorilo SmartScreen (program ni digitalno podpisan): kliknite Več informacij → Vseeno zaženi."
+          if gh release view "$TAG" >/dev/null 2>&1; then
+            gh release upload "$TAG" dist/VisionOne-Kamere-Setup.exe --clobber
+          else
+            gh release create "$TAG" dist/VisionOne-Kamere-Setup.exe --title "VisionOne Kamere $VER" --notes "$NOTES" --latest
+          fi

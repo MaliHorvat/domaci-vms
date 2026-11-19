@@ -1,0 +1,103 @@
+/* Pogled kamer za telefon. Temna podlaga, da slika kamer izstopa; vse ostalo je tiho. */
+/* pogled kamer je vedno temen, ne glede na nastavitev telefona */
+body.m {
+  --bg: #0d1116; --panel: #161c23; --panel-2: #1d252e; --panel-3: #26303b; --line: #26303b;
+  --text: #e3e8ee; --muted: #8b97a5; --accent: #6aa8ff; --accent-ink: #0b1a2e;
+  background: var(--bg); overscroll-behavior-y: none; -webkit-tap-highlight-color: transparent;
+  color-scheme: dark;
+}
+.m #app { display: flex; flex-direction: column; height: 100dvh; }
+.m button { font: inherit; color: inherit; }
+
+/* ---------- vrh ---------- */
+.m-top { position: relative; display: flex; align-items: center; gap: 10px; flex: none;
+  padding: calc(env(safe-area-inset-top) + 10px) 12px 10px 16px; background: var(--bg); border-bottom: 1px solid var(--line); }
+.m-title { display: flex; align-items: center; gap: 10px; min-width: 0; flex: 1; }
+.m-title .brand-mark { width: 22px; height: 22px; border-width: 2px; }
+.m-title .brand-mark::after { inset: 4px; }
+.m-title strong { font-size: 17px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.m-conn { font-size: 12px; color: var(--muted); display: inline-flex; align-items: center; gap: 6px; white-space: nowrap; }
+.m-conn::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: var(--ok); }
+.m-conn.vpn::before { background: var(--accent); }
+.m-iconbtn { display: grid; place-items: center; width: 40px; height: 40px; border: 0; border-radius: 50%; background: transparent; cursor: pointer; flex: none; }
+.m-iconbtn:active { background: var(--panel-2); }
+.m-iconbtn:disabled { opacity: .3; }
+.dots, .dots::before, .dots::after { width: 4px; height: 4px; border-radius: 50%; background: currentColor; display: block; position: relative; }
+.dots::before, .dots::after { content: ""; position: absolute; left: 0; }
+.dots::before { top: -7px; } .dots::after { top: 7px; }
+.m-menu { position: absolute; right: 10px; top: calc(100% - 4px); z-index: 30; min-width: 230px; background: var(--panel-2); border: 1px solid var(--line);
+  border-radius: 12px; padding: 6px; box-shadow: 0 16px 40px rgba(0, 0, 0, .5); display: grid; }
+.m-menu > * { display: flex; align-items: center; gap: 12px; padding: 12px; border: 0; background: none; border-radius: 8px; text-align: left; text-decoration: none; color: var(--text); cursor: pointer; }
+.m-menu > *:active { background: var(--panel-3); }
+.m-menu[hidden] { display: none; }
+
+/* ---------- vsebina ---------- */
+.m-main { flex: 1; overflow-y: auto; -webkit-overflow-scrolling: touch; padding: 12px 12px 16px; }
+.m-chips { display: flex; gap: 8px; overflow-x: auto; margin: 0 -12px 12px; padding: 0 12px; scrollbar-width: none; }
+.m-chips::-webkit-scrollbar { display: none; }
+.m-chips button { flex: none; height: 34px; padding: 0 14px; border-radius: 17px; border: 1px solid var(--line); background: var(--panel); color: var(--muted); font-size: 14px; }
+.m-chips button[aria-pressed="true"] { background: var(--text); border-color: var(--text); color: var(--bg); }
+
+.m-grid { display: grid; gap: 12px; }
+.m-grid.cols-2 { grid-template-columns: 1fr 1fr; gap: 8px; }
+@media (min-width: 700px) { .m-grid.cols-1 { grid-template-columns: 1fr 1fr; } .m-grid.cols-2 { grid-template-columns: repeat(3, 1fr); } }
+
+.m-tile { display: block; width: 100%; padding: 0; border: 0; background: none; text-align: left; cursor: pointer; }
+.m-frame { position: relative; aspect-ratio: 16 / 9; border-radius: 10px; overflow: hidden; background: #05070a; }
+.m-frame img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0; transition: opacity .25s; }
+.m-tile.ok .m-frame img { opacity: 1; }
+.m-wait { position: absolute; inset: 0; display: grid; place-items: center; font-size: 13px; color: var(--muted); }
+.m-tile.ok:not(.err) .m-wait { display: none; }
+.m-tile:active .m-frame { outline: 2px solid var(--accent); outline-offset: -2px; }
+.m-cap { display: flex; align-items: center; gap: 8px; padding: 8px 2px 2px; font-size: 14.5px; min-width: 0; }
+.cols-2 .m-cap { font-size: 13px; padding-top: 6px; }
+.m-cap .name { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.m-cap .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--ok); flex: none; }
+.m-tile.offline .m-cap .dot { background: var(--alarm); }
+.m-tile.offline .m-frame img { filter: grayscale(1) brightness(.6); }
+.m-cap .rec { font-size: 10.5px; font-weight: 700; letter-spacing: .04em; color: var(--rec); }
+.cols-2 .m-cap .rec { display: none; }
+
+.m-empty { display: grid; justify-items: center; gap: 6px; text-align: center; padding: 64px 24px; color: var(--muted); }
+.m-empty strong { color: var(--text); font-size: 17px; }
+.m-empty p { margin: 0 0 12px; max-width: 30ch; }
+
+/* ---------- dogodki ---------- */
+.m-events { display: grid; gap: 2px; }
+.m-day { font-size: 13px; font-weight: 600; color: var(--muted); margin: 14px 4px 6px; }
+.m-day:first-child { margin-top: 2px; }
+.m-day::first-letter { text-transform: uppercase; }
+.m-event { display: grid; grid-template-columns: 96px minmax(0, 1fr) auto; gap: 12px; align-items: center; width: 100%; padding: 8px; border: 0; border-radius: 10px; background: var(--panel); text-align: left; cursor: pointer; margin-bottom: 6px; }
+.m-event img, .m-noimg { width: 96px; aspect-ratio: 16 / 9; object-fit: cover; border-radius: 6px; background: #05070a; display: grid; place-items: center; color: var(--muted); }
+.m-event strong { display: block; font-size: 14.5px; font-weight: 600; }
+.m-event div > span { display: block; font-size: 13px; color: var(--muted); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.m-event time { font-size: 13px; color: var(--muted); padding-right: 4px; }
+.m-event.sev-alarm { box-shadow: inset 3px 0 0 var(--alarm); }
+
+/* ---------- spodnji zavihki ---------- */
+.m-tabs { flex: none; display: grid; grid-template-columns: 1fr 1fr; border-top: 1px solid var(--line); background: var(--bg); padding-bottom: env(safe-area-inset-bottom); }
+.m-tabs button { position: relative; display: grid; justify-items: center; gap: 2px; padding: 8px 0 6px; border: 0; background: none; color: var(--muted); font-size: 11.5px; cursor: pointer; }
+.m-tabs button[aria-pressed="true"] { color: var(--text); }
+.m-tabs button[aria-pressed="true"] .ico { color: var(--accent); }
+.m-badge { position: absolute; top: 4px; left: calc(50% + 6px); min-width: 18px; height: 18px; padding: 0 5px; border-radius: 9px; background: var(--alarm); color: #fff; font: 600 11px/18px var(--font); font-style: normal; }
+.m-badge[hidden] { display: none; }
+
+/* ---------- živa slika čez cel zaslon ---------- */
+.m-live { position: fixed; inset: 0; z-index: 100; background: #000; display: grid; grid-template-rows: auto 1fr auto; touch-action: none; overflow: hidden; }
+.m-live > header, .m-live > footer { position: relative; z-index: 2; display: flex; align-items: center; gap: 8px; padding: 8px 10px; color: #fff;
+  background: linear-gradient(rgba(0, 0, 0, .7), rgba(0, 0, 0, 0)); }
+.m-live > header { padding-top: calc(env(safe-area-inset-top) + 6px); }
+.m-live > footer { justify-content: space-between; padding-bottom: calc(env(safe-area-inset-bottom) + 10px); background: linear-gradient(rgba(0, 0, 0, 0), rgba(0, 0, 0, .7)); }
+.m-live > header strong { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 16px; font-weight: 600; }
+.m-live .m-iconbtn:active { background: rgba(255, 255, 255, .15); }
+.m-stage { grid-row: 1 / -1; grid-column: 1; position: relative; transform-origin: center; will-change: transform; }
+.m-live > header { grid-row: 1; grid-column: 1; align-self: start; }
+.m-live > footer { grid-row: 3; grid-column: 1; align-self: end; }
+.m-msg { grid-row: 2; grid-column: 1; place-self: center; z-index: 1; color: rgba(255, 255, 255, .8); font-size: 14px; background: rgba(0, 0, 0, .5); padding: 8px 14px; border-radius: 18px; }
+.m-msg[hidden] { display: none; }
+.m-pill { height: 30px; min-width: 44px; padding: 0 10px; border-radius: 15px; border: 1px solid rgba(255, 255, 255, .35); background: transparent; color: #fff; font-size: 12.5px; font-weight: 600; cursor: pointer; }
+.m-pill[aria-pressed="true"] { background: #fff; color: #000; border-color: #fff; }
+.m-pos { font-size: 13px; color: rgba(255, 255, 255, .75); }
+@media (orientation: landscape) and (max-height: 500px) {
+  .m-live > header, .m-live > footer { opacity: .9; }
+}
